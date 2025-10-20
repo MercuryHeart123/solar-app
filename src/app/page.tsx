@@ -5,8 +5,6 @@ import { useMemo, useState } from "react";
 import { MapPicker } from "@/components/map/map-picker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Stepper } from "@/components/ui/stepper";
 import { Slider } from "@/components/ui/slider";
@@ -113,7 +111,7 @@ export default function Home() {
 
     const applianceSummary = useMemo(() => {
         if (!selectedAppliances.length) {
-            return "No power-hungry appliances selected yet.";
+            return "No power-hungry appliances set yet.";
         }
 
         return selectedAppliances
@@ -123,14 +121,6 @@ export default function Home() {
             )
             .join(", ");
     }, [appliances, selectedAppliances]);
-
-    const toggleAppliance = (id: string, enabled: boolean) => {
-        setAppliances((current) => {
-            const nextValue = enabled ? Math.max(1, current[id] ?? 1) : 0;
-
-            return { ...current, [id]: nextValue };
-        });
-    };
 
     const handleOccupantChange = (value: number) => {
         const rounded = Math.round(value);
@@ -387,52 +377,47 @@ export default function Home() {
                                     4. Power-hungry appliances
                                 </h2>
                                 <p className="text-sm text-emerald-700/80">
-                                    Check what you run regularly, then slide to
-                                    match how many you rely on.
+                                    Slide each bar to match how many you rely
+                                    on—leave it at zero if it rarely runs.
                                 </p>
                             </div>
                             <div className="grid gap-3">
                                 {appliancePresets.map((appliance) => {
-                                    const selected =
-                                        (appliances[appliance.id] ?? 0) > 0;
                                     const quantity =
                                         appliances[appliance.id] ?? 0;
+                                    const isActive = quantity > 0;
 
                                     return (
                                         <div
                                             key={appliance.id}
-                                            className="flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-white/60 p-4 sm:flex-row sm:items-center sm:justify-between"
+                                            className={`flex flex-col gap-3 rounded-2xl border bg-white/60 p-4 transition sm:flex-row sm:items-center sm:justify-between ${
+                                                isActive
+                                                    ? "border-emerald-200 bg-emerald-50 shadow-sm"
+                                                    : "border-emerald-100"
+                                            }`}
                                         >
-                                            <Label className="flex w-full items-center gap-3 text-base font-medium text-emerald-900 sm:w-auto">
-                                                <Checkbox
-                                                    checked={selected}
-                                                    onChange={(event) =>
-                                                        toggleAppliance(
-                                                            appliance.id,
-                                                            event.target.checked
-                                                        )
-                                                    }
-                                                    aria-label={appliance.label}
-                                                />
-                                                {appliance.label}
-                                            </Label>
+                                            <div className="flex w-full items-center justify-between gap-3 sm:w-auto">
+                                                <span className="text-base font-medium text-emerald-900">
+                                                    {appliance.label}
+                                                </span>
+                                                {isActive ? (
+                                                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+                                                        In use
+                                                    </span>
+                                                ) : null}
+                                            </div>
                                             <div className="flex w-full flex-col gap-3 sm:w-72">
                                                 <div className="flex items-center justify-between text-sm font-medium text-emerald-800">
                                                     <span>Quantity</span>
                                                     <span className="flex h-9 w-14 items-center justify-center rounded-full bg-emerald-100 text-base font-semibold text-emerald-900">
-                                                        {selected
-                                                            ? quantity
-                                                            : 0}
+                                                        {quantity}
                                                     </span>
                                                 </div>
                                                 <Slider
                                                     min={0}
                                                     max={6}
                                                     step={1}
-                                                    value={
-                                                        selected ? quantity : 0
-                                                    }
-                                                    disabled={!selected}
+                                                    value={quantity}
                                                     onValueChange={(
                                                         nextValue
                                                     ) =>
