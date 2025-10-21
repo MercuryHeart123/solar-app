@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 
-import { MapPicker } from "@/components/map/map-picker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -96,10 +95,6 @@ export default function Home() {
             {} as Record<string, number>
         )
     );
-    const [residenceLocation, setResidenceLocation] = useState<{
-        lat: number;
-        lng: number;
-    } | null>(null);
 
     const selectedAppliances = useMemo(
         () =>
@@ -156,14 +151,9 @@ export default function Home() {
         console.log("Survey responses", {
             monthlyBill,
             residenceType,
-            residenceLocation,
             occupants,
             appliances,
         });
-    };
-
-    const handleClearPin = () => {
-        setResidenceLocation(null);
     };
 
     const stepContent = (() => {
@@ -262,58 +252,6 @@ export default function Home() {
                                 />
                             ))}
                         </RadioGroup>
-                        <div className="grid gap-4 rounded-2xl border border-emerald-100 bg-white/70 p-5">
-                            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                                <div className="space-y-1">
-                                    <p className="text-sm font-semibold text-emerald-900">
-                                        Pin your rooftop{" "}
-                                        <span className="text-xs font-medium text-emerald-500/90">
-                                            (optional)
-                                        </span>
-                                    </p>
-                                    <p className="text-xs text-emerald-700/80">
-                                        Tap on the OpenStreetMap below to drop a
-                                        pin on your home. Drag to fine-tune the
-                                        location—this helps dial in sun exposure
-                                        but isn’t required.
-                                    </p>
-                                </div>
-                                {residenceLocation ? (
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={handleClearPin}
-                                        className="self-end sm:self-auto"
-                                    >
-                                        Clear pin
-                                    </Button>
-                                ) : null}
-                            </div>
-                            <MapPicker
-                                className="h-72 w-full overflow-hidden rounded-2xl"
-                                value={residenceLocation}
-                                onChange={setResidenceLocation}
-                            />
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-emerald-700/90">
-                                <span className="rounded-full bg-emerald-100 px-3 py-1 font-semibold uppercase tracking-wide text-emerald-800">
-                                    {residenceLocation
-                                        ? "Pin saved"
-                                        : "Optional rooftop pin"}
-                                </span>
-                                {residenceLocation ? (
-                                    <span>
-                                        Lat: {residenceLocation.lat.toFixed(5)}{" "}
-                                        · Lng:{" "}
-                                        {residenceLocation.lng.toFixed(5)}
-                                    </span>
-                                ) : (
-                                    <span>
-                                        We’ll use this to tailor sun exposure
-                                        estimates.
-                                    </span>
-                                )}
-                            </div>
-                        </div>
                     </section>
                 );
             case 2:
@@ -449,20 +387,6 @@ export default function Home() {
                                 </span>
                             </div>
                             <div className="grid gap-2 text-sm text-emerald-800 sm:grid-cols-2">
-                                <div>
-                                    <p className="font-semibold text-emerald-900">
-                                        Pinned location
-                                    </p>
-                                    <p className="text-emerald-700/90">
-                                        {residenceLocation
-                                            ? `Lat ${residenceLocation.lat.toFixed(
-                                                  4
-                                              )}, Lng ${residenceLocation.lng.toFixed(
-                                                  4
-                                              )}`
-                                            : "Not pinned yet"}
-                                    </p>
-                                </div>
                                 <div>
                                     <p className="font-semibold text-emerald-900">
                                         Monthly bill
