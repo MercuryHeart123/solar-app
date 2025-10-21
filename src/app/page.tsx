@@ -1,12 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 
+import { ThailandMap } from "@/components/thailand-map";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Stepper } from "@/components/ui/stepper";
 import { Slider } from "@/components/ui/slider";
+import {
+    THAILAND_PROVINCES,
+    type ThailandProvinceId,
+} from "@/data/thailand-provinces";
 
 const billSlider = {
     min: 500,
@@ -88,6 +93,10 @@ export default function Home() {
     const [residenceType, setResidenceType] = useState<string>(
         residenceOptions[0]?.value
     );
+    const [selectedProvinceId, setSelectedProvinceId] =
+        useState<ThailandProvinceId | null>(
+            THAILAND_PROVINCES.length ? THAILAND_PROVINCES[0].id : null
+        );
     const [occupants, setOccupants] = useState<number>(2);
     const [appliances, setAppliances] = useState<Record<string, number>>(() =>
         appliancePresets.reduce(
@@ -103,6 +112,18 @@ export default function Home() {
             ),
         [appliances]
     );
+
+    const selectedProvinceName = useMemo(() => {
+        if (!selectedProvinceId) {
+            return "Not selected";
+        }
+
+        return (
+            THAILAND_PROVINCES.find(
+                (province) => province.id === selectedProvinceId
+            )?.name ?? "Not selected"
+        );
+    }, [selectedProvinceId]);
 
     const applianceSummary = useMemo(() => {
         if (!selectedAppliances.length) {
@@ -136,6 +157,26 @@ export default function Home() {
         setAppliances((current) => ({ ...current, [id]: clamped }));
     };
 
+    const updateProvinceSelection = (provinceId: string | null) => {
+        if (!provinceId) {
+            setSelectedProvinceId(null);
+            return;
+        }
+
+        const match = THAILAND_PROVINCES.find(
+            (province) => province.id === provinceId
+        );
+        if (match) {
+            setSelectedProvinceId(match.id);
+        }
+    };
+
+    const handleProvinceDropdownChange = (
+        event: ChangeEvent<HTMLSelectElement>
+    ) => {
+        updateProvinceSelection(event.target.value || null);
+    };
+
     const isFirstStep = currentStep === 0;
     const isLastStep = currentStep === steps.length - 1;
 
@@ -151,6 +192,10 @@ export default function Home() {
         console.log("Survey responses", {
             monthlyBill,
             residenceType,
+            province: {
+                id: selectedProvinceId,
+                name: selectedProvinceName,
+            },
             occupants,
             appliances,
         });
@@ -165,13 +210,13 @@ export default function Home() {
                             <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
                                 1. Monthly electricity bill
                             </h2>
-                            <p className="text-sm text-emerald-700/80">
+                            <p className="text-sm text-emerald-700">
                                 Slide to match your average bill in Thai Baht
                                 (฿). This helps us estimate savings more
                                 precisely.
                             </p>
                         </div>
-                        <div className="grid gap-5 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5">
+                        <div className="grid gap-5 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
@@ -228,30 +273,103 @@ export default function Home() {
                 );
             case 1:
                 return (
-                    <section className="grid gap-6">
+                    <section className="flex flex-col gap-6 lg:grid-cols-[minmax(280px,1fr)_minmax(320px,1fr)]">
                         <div className="space-y-1">
                             <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
                                 2. Residence type
                             </h2>
-                            <p className="text-sm text-emerald-700/80">
+                            <p className="text-sm text-emerald-700">
                                 Choose the option that best matches your roof
-                                situation.
+                                situation and tell us where in Thailand you
+                                live.
                             </p>
                         </div>
-                        <RadioGroup
-                            value={residenceType}
-                            onValueChange={setResidenceType}
-                            className="grid gap-3 md:grid-cols-3"
-                        >
-                            {residenceOptions.map((option) => (
-                                <RadioGroupItem
-                                    key={option.value}
-                                    value={option.value}
-                                    label={option.label}
-                                    description={option.description}
-                                />
-                            ))}
-                        </RadioGroup>
+                        <div className="grid gap-5 rounded-2xl border border-emerald-100 bg-white p-4 lg:p-6">
+                            <div className="grid gap-5 lg:grid-cols-[minmax(260px,1fr)_minmax(260px,1fr)] lg:items-start lg:gap-8">
+                                <div className="grid gap-4">
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                                            Map your province
+                                        </p>
+                                        <p className="text-sm text-emerald-700">
+                                            Click directly on the map or use the
+                                            dropdown. We will highlight the
+                                            province in deep green.
+                                        </p>
+                                    </div>
+                                    <div className="rounded-2xl border border-emerald-100 bg-whit p-3">
+                                        <ThailandMap
+                                            selectedProvinceId={
+                                                selectedProvinceId
+                                            }
+                                            onSelect={(provinceId) =>
+                                                updateProvinceSelection(
+                                                    provinceId
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid gap-5">
+                                    <div className="grid gap-3 rounded-2xl border border-emerald-100 bg-white p-4">
+                                        <label
+                                            htmlFor="province-select"
+                                            className="text-xs font-semibold uppercase tracking-wide text-emerald-600"
+                                        >
+                                            Province
+                                        </label>
+                                        <p className="text-sm text-emerald-700">
+                                            Selecting your province helps us
+                                            tailor the sunshine profile for your
+                                            home.
+                                        </p>
+                                        <select
+                                            id="province-select"
+                                            value={selectedProvinceId ?? ""}
+                                            onChange={
+                                                handleProvinceDropdownChange
+                                            }
+                                            className="h-11 rounded-xl border border-emerald-200 bg-white px-3 text-sm text-emerald-900 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
+                                        >
+                                            <option value="" disabled>
+                                                Choose a province
+                                            </option>
+                                            {THAILAND_PROVINCES.map(
+                                                (province) => (
+                                                    <option
+                                                        key={province.id}
+                                                        value={province.id}
+                                                    >
+                                                        {province.name}
+                                                    </option>
+                                                )
+                                            )}
+                                        </select>
+                                    </div>
+                                    <div className="grid gap-4 rounded-2xl border border-emerald-100 bg-white p-4">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                                            Residence style
+                                        </p>
+                                        <RadioGroup
+                                            value={residenceType}
+                                            onValueChange={setResidenceType}
+                                            className="grid gap-3"
+                                        >
+                                            {residenceOptions.map((option) => (
+                                                <RadioGroupItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                    label={option.label}
+                                                    description={
+                                                        option.description
+                                                    }
+                                                />
+                                            ))}
+                                        </RadioGroup>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 );
             case 2:
@@ -261,19 +379,19 @@ export default function Home() {
                             <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
                                 3. People in the home
                             </h2>
-                            <p className="text-sm text-emerald-700/80">
+                            <p className="text-sm text-emerald-700">
                                 Slide to adjust your household size. Most
                                 solar-ready homes fall between two and four
                                 residents.
                             </p>
                         </div>
-                        <div className="grid gap-4 rounded-2xl border border-emerald-100 bg-emerald-50/50 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6">
+                        <div className="grid gap-4 rounded-2xl border border-emerald-100 bg-emerald-50 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6">
                             <div className="space-y-1">
                                 <p className="text-base font-medium text-emerald-900">
                                     {occupants} resident
                                     {occupants > 1 ? "s" : ""}
                                 </p>
-                                <p className="text-sm text-emerald-700/80">
+                                <p className="text-sm text-emerald-700">
                                     {occupants <= 2
                                         ? "Smaller households still drive meaningful demand."
                                         : occupants >= 6
@@ -314,7 +432,7 @@ export default function Home() {
                                 <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
                                     4. Power-hungry appliances
                                 </h2>
-                                <p className="text-sm text-emerald-700/80">
+                                <p className="text-sm text-emerald-700">
                                     Slide each bar to match how many you rely
                                     on—leave it at zero if it rarely runs.
                                 </p>
@@ -328,7 +446,7 @@ export default function Home() {
                                     return (
                                         <div
                                             key={appliance.id}
-                                            className={`flex flex-col gap-3 rounded-2xl border bg-white/60 p-4 transition sm:flex-row sm:items-center sm:justify-between ${
+                                            className={`flex flex-col gap-3 rounded-2xl border bg-white p-4 transition sm:flex-row sm:items-center sm:justify-between ${
                                                 isActive
                                                     ? "border-emerald-200 bg-emerald-50 shadow-sm"
                                                     : "border-emerald-100"
@@ -377,12 +495,12 @@ export default function Home() {
                                 })}
                             </div>
                         </section>
-                        <section className="grid gap-3 rounded-2xl bg-emerald-600/10 p-5">
+                        <section className="grid gap-3 rounded-2xl bg-emerald-600 p-5">
                             <div className="flex items-baseline gap-2">
                                 <span className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
                                     Snapshot
                                 </span>
-                                <span className="text-xs text-emerald-700/80">
+                                <span className="text-xs text-emerald-700">
                                     Review before sending
                                 </span>
                             </div>
@@ -391,7 +509,7 @@ export default function Home() {
                                     <p className="font-semibold text-emerald-900">
                                         Monthly bill
                                     </p>
-                                    <p className="text-emerald-700/90">
+                                    <p className="text-emerald-700">
                                         {formatBaht(monthlyBill)}
                                     </p>
                                 </div>
@@ -399,7 +517,7 @@ export default function Home() {
                                     <p className="font-semibold text-emerald-900">
                                         Residence
                                     </p>
-                                    <p className="text-emerald-700/90">
+                                    <p className="text-emerald-700">
                                         {
                                             residenceOptions.find(
                                                 (option) =>
@@ -411,9 +529,17 @@ export default function Home() {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-emerald-900">
+                                        Province
+                                    </p>
+                                    <p className="text-emerald-700">
+                                        {selectedProvinceName}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-emerald-900">
                                         Household size
                                     </p>
-                                    <p className="text-emerald-700/90">
+                                    <p className="text-emerald-700">
                                         {occupants} resident
                                         {occupants > 1 ? "s" : ""}
                                     </p>
@@ -422,12 +548,12 @@ export default function Home() {
                                     <p className="font-semibold text-emerald-900">
                                         Appliances & quantities
                                     </p>
-                                    <p className="text-emerald-700/90">
+                                    <p className="text-emerald-700">
                                         {applianceSummary}
                                     </p>
                                 </div>
                             </div>
-                            <p className="text-xs text-emerald-700/90">
+                            <p className="text-xs text-emerald-700">
                                 Ready to go? Submit to receive a tailored solar
                                 savings estimate in your inbox.
                             </p>
@@ -440,7 +566,7 @@ export default function Home() {
     })();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-emerald-200 px-6 py-12">
+        <div className="min-h-screen px-6 py-12">
             <main className="mx-auto flex max-w-4xl flex-col items-center gap-10">
                 <div className="text-center">
                     <span className="rounded-full bg-emerald-200 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800">
@@ -468,11 +594,11 @@ export default function Home() {
                     </CardHeader>
                     <CardContent className="grid gap-8">
                         <Stepper steps={steps} currentStep={currentStep} />
-                        <div className="grid gap-6 rounded-3xl border border-emerald-100/80 bg-white/80 p-6">
+                        <div className="grid gap-6 rounded-3xl border border-emerald-100 bg-white p-6">
                             {stepContent}
                         </div>
                         <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-                            <span className="text-xs text-emerald-700/90">
+                            <span className="text-xs text-emerald-700">
                                 Step {currentStep + 1} of {steps.length}
                             </span>
                             <div className="flex items-center gap-3">
