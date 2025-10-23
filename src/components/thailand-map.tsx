@@ -2,6 +2,7 @@
 
 import { memo, useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { THAILAND_PROVINCES } from "@/data/thailand-provinces";
 
 type ProvincePath = {
     id: string;
@@ -103,6 +104,14 @@ function ThailandMapComponent({
         return undefined;
     }, [error, mapData, t]);
 
+    const provinceNameMap = useMemo(() => {
+        const map = new Map<string, string>();
+        THAILAND_PROVINCES.forEach((province) => {
+            map.set(province.id, t(province.nameKey));
+        });
+        return map;
+    }, [t]);
+
     if (statusLabel) {
         return (
             <div
@@ -144,7 +153,11 @@ function ThailandMapComponent({
                             strokeLinejoin="round"
                             tabIndex={0}
                             role="button"
-                            aria-label={province.name || province.id}
+                            aria-label={
+                                provinceNameMap.get(province.id) ||
+                                province.name ||
+                                province.id
+                            }
                             onClick={() => onSelect?.(province.id)}
                             onKeyDown={(event) => {
                                 if (
@@ -168,9 +181,8 @@ function ThailandMapComponent({
             </svg>
             <figcaption className="text-xs uppercase tracking-wide text-emerald-600">
                 {selectedProvinceId
-                    ? mapData?.provinces.find(
-                          (province) => province.id === selectedProvinceId
-                      )?.name ?? t("map.captionSelected")
+                    ? provinceNameMap.get(selectedProvinceId) ??
+                      t("map.captionSelected")
                     : t("map.captionEmpty")}
             </figcaption>
         </figure>

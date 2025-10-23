@@ -1,316 +1,88 @@
-export const THAILAND_PROVINCES = [
-    {
-        "id": "bkk",
-        "name": "Bangkok"
-    },
-    {
-        "id": "spk",
-        "name": "Samut Prakan"
-    },
-    {
-        "id": "nbi",
-        "name": "Nonthaburi"
-    },
-    {
-        "id": "pte",
-        "name": "Pathum Thani"
-    },
-    {
-        "id": "aya",
-        "name": "Phra Nakhon Si Ayutthaya"
-    },
-    {
-        "id": "atg",
-        "name": "Ang Thong"
-    },
-    {
-        "id": "lri",
-        "name": "Lop Buri"
-    },
-    {
-        "id": "sbr",
-        "name": "Sing Buri"
-    },
-    {
-        "id": "cnt",
-        "name": "Chai Nat"
-    },
-    {
-        "id": "sri",
-        "name": "Saraburi"
-    },
-    {
-        "id": "cbi",
-        "name": "Chon Buri"
-    },
-    {
-        "id": "ryg",
-        "name": "Rayong"
-    },
-    {
-        "id": "cti",
-        "name": "Chanthaburi"
-    },
-    {
-        "id": "trt",
-        "name": "Trat"
-    },
-    {
-        "id": "cco",
-        "name": "Chachoengsao"
-    },
-    {
-        "id": "pri",
-        "name": "Prachin Buri"
-    },
-    {
-        "id": "nyk",
-        "name": "Nakhon Nayok"
-    },
-    {
-        "id": "skw",
-        "name": "Sa Kaeo"
-    },
-    {
-        "id": "nma",
-        "name": "Nakhon Ratchasima"
-    },
-    {
-        "id": "brm",
-        "name": "Buriram"
-    },
-    {
-        "id": "srn",
-        "name": "Surin"
-    },
-    {
-        "id": "ssk",
-        "name": "Si Sa Ket"
-    },
-    {
-        "id": "ubn",
-        "name": "Ubon Ratchathani"
-    },
-    {
-        "id": "yst",
-        "name": "Yasothon"
-    },
-    {
-        "id": "cpm",
-        "name": "Chaiyaphum"
-    },
-    {
-        "id": "acr",
-        "name": "Amnat Charoen"
-    },
-    {
-        "id": "bkn",
-        "name": "Bueng Kan"
-    },
-    {
-        "id": "nbp",
-        "name": "Nong Bua Lam Phu"
-    },
-    {
-        "id": "kkn",
-        "name": "Khon Kaen"
-    },
-    {
-        "id": "udn",
-        "name": "Udon Thani"
-    },
-    {
-        "id": "lei",
-        "name": "Loei"
-    },
-    {
-        "id": "nki",
-        "name": "Nong Khai"
-    },
-    {
-        "id": "mkm",
-        "name": "Maha Sarakham"
-    },
-    {
-        "id": "ret",
-        "name": "Roi Et"
-    },
-    {
-        "id": "ksn",
-        "name": "Kalasin"
-    },
-    {
-        "id": "snk",
-        "name": "Sakon Nakhon"
-    },
-    {
-        "id": "npm",
-        "name": "Nakhon Phanom"
-    },
-    {
-        "id": "mdh",
-        "name": "Mukdahan"
-    },
-    {
-        "id": "cmi",
-        "name": "Chiang Mai"
-    },
-    {
-        "id": "lpn",
-        "name": "Lamphun"
-    },
-    {
-        "id": "lpg",
-        "name": "Lampang"
-    },
-    {
-        "id": "utd",
-        "name": "Uttaradit"
-    },
-    {
-        "id": "pre",
-        "name": "Phrae"
-    },
-    {
-        "id": "nan",
-        "name": "Nan"
-    },
-    {
-        "id": "pyo",
-        "name": "Phayao"
-    },
-    {
-        "id": "cri",
-        "name": "Chiang Rai"
-    },
-    {
-        "id": "msn",
-        "name": "Mae Hong Son"
-    },
-    {
-        "id": "nsn",
-        "name": "Nakhon Sawan"
-    },
-    {
-        "id": "uti",
-        "name": "Uthai Thani"
-    },
-    {
-        "id": "kpt",
-        "name": "Kamphaeng Phet"
-    },
-    {
-        "id": "tak",
-        "name": "Tak"
-    },
-    {
-        "id": "sti",
-        "name": "Sukhothai"
-    },
-    {
-        "id": "plk",
-        "name": "Phitsanulok"
-    },
-    {
-        "id": "pct",
-        "name": "Phichit"
-    },
-    {
-        "id": "pnb",
-        "name": "Phetchabun"
-    },
-    {
-        "id": "rbr",
-        "name": "Ratchaburi"
-    },
-    {
-        "id": "kri",
-        "name": "Kanchanaburi"
-    },
-    {
-        "id": "spb",
-        "name": "Suphan Buri"
-    },
-    {
-        "id": "npt",
-        "name": "Nakhon Pathom"
-    },
-    {
-        "id": "skn",
-        "name": "Samut Sakhon"
-    },
-    {
-        "id": "skm",
-        "name": "Samut Songkhram"
-    },
-    {
-        "id": "pbi",
-        "name": "Phetchaburi"
-    },
-    {
-        "id": "pkn",
-        "name": "Prachuap Khiri Khan"
-    },
-    {
-        "id": "nrt",
-        "name": "Nakhon Si Thammarat"
-    },
-    {
-        "id": "kbi",
-        "name": "Krabi"
-    },
-    {
-        "id": "pna",
-        "name": "Phangnga"
-    },
-    {
-        "id": "pkt",
-        "name": "Phuket"
-    },
-    {
-        "id": "sni",
-        "name": "Surat Thani"
-    },
-    {
-        "id": "rng",
-        "name": "Ranong"
-    },
-    {
-        "id": "cpn",
-        "name": "Chumphon"
-    },
-    {
-        "id": "ska",
-        "name": "Songkhla"
-    },
-    {
-        "id": "stn",
-        "name": "Satun"
-    },
-    {
-        "id": "trg",
-        "name": "Trang"
-    },
-    {
-        "id": "plg",
-        "name": "Phatthalung"
-    },
-    {
-        "id": "ptn",
-        "name": "Pattani"
-    },
-    {
-        "id": "yla",
-        "name": "Yala"
-    },
-    {
-        "id": "nwt",
-        "name": "Narathiwat"
-    },
-    {
-        "id": "lksg",
-        "name": "Lake Songkha"
-    }
-] as const;
+type ProvinceEntry = {
+    id: string;
+    nameKey: `provinceNames.${string}`;
+};
 
-export type ThailandProvinceId = typeof THAILAND_PROVINCES[number]['id'];
+export const THAILAND_PROVINCES = [
+    { id: "bkk", nameKey: "provinceNames.bkk" },
+    { id: "spk", nameKey: "provinceNames.spk" },
+    { id: "nbi", nameKey: "provinceNames.nbi" },
+    { id: "pte", nameKey: "provinceNames.pte" },
+    { id: "aya", nameKey: "provinceNames.aya" },
+    { id: "atg", nameKey: "provinceNames.atg" },
+    { id: "lri", nameKey: "provinceNames.lri" },
+    { id: "sbr", nameKey: "provinceNames.sbr" },
+    { id: "cnt", nameKey: "provinceNames.cnt" },
+    { id: "sri", nameKey: "provinceNames.sri" },
+    { id: "cbi", nameKey: "provinceNames.cbi" },
+    { id: "ryg", nameKey: "provinceNames.ryg" },
+    { id: "cti", nameKey: "provinceNames.cti" },
+    { id: "trt", nameKey: "provinceNames.trt" },
+    { id: "cco", nameKey: "provinceNames.cco" },
+    { id: "pri", nameKey: "provinceNames.pri" },
+    { id: "nyk", nameKey: "provinceNames.nyk" },
+    { id: "skw", nameKey: "provinceNames.skw" },
+    { id: "nma", nameKey: "provinceNames.nma" },
+    { id: "brm", nameKey: "provinceNames.brm" },
+    { id: "srn", nameKey: "provinceNames.srn" },
+    { id: "ssk", nameKey: "provinceNames.ssk" },
+    { id: "ubn", nameKey: "provinceNames.ubn" },
+    { id: "yst", nameKey: "provinceNames.yst" },
+    { id: "cpm", nameKey: "provinceNames.cpm" },
+    { id: "acr", nameKey: "provinceNames.acr" },
+    { id: "bkn", nameKey: "provinceNames.bkn" },
+    { id: "nbp", nameKey: "provinceNames.nbp" },
+    { id: "kkn", nameKey: "provinceNames.kkn" },
+    { id: "udn", nameKey: "provinceNames.udn" },
+    { id: "lei", nameKey: "provinceNames.lei" },
+    { id: "nki", nameKey: "provinceNames.nki" },
+    { id: "mkm", nameKey: "provinceNames.mkm" },
+    { id: "ret", nameKey: "provinceNames.ret" },
+    { id: "ksn", nameKey: "provinceNames.ksn" },
+    { id: "snk", nameKey: "provinceNames.snk" },
+    { id: "npm", nameKey: "provinceNames.npm" },
+    { id: "mdh", nameKey: "provinceNames.mdh" },
+    { id: "cmi", nameKey: "provinceNames.cmi" },
+    { id: "lpn", nameKey: "provinceNames.lpn" },
+    { id: "lpg", nameKey: "provinceNames.lpg" },
+    { id: "utd", nameKey: "provinceNames.utd" },
+    { id: "pre", nameKey: "provinceNames.pre" },
+    { id: "nan", nameKey: "provinceNames.nan" },
+    { id: "pyo", nameKey: "provinceNames.pyo" },
+    { id: "cri", nameKey: "provinceNames.cri" },
+    { id: "msn", nameKey: "provinceNames.msn" },
+    { id: "nsn", nameKey: "provinceNames.nsn" },
+    { id: "uti", nameKey: "provinceNames.uti" },
+    { id: "kpt", nameKey: "provinceNames.kpt" },
+    { id: "tak", nameKey: "provinceNames.tak" },
+    { id: "sti", nameKey: "provinceNames.sti" },
+    { id: "plk", nameKey: "provinceNames.plk" },
+    { id: "pct", nameKey: "provinceNames.pct" },
+    { id: "pnb", nameKey: "provinceNames.pnb" },
+    { id: "rbr", nameKey: "provinceNames.rbr" },
+    { id: "kri", nameKey: "provinceNames.kri" },
+    { id: "spb", nameKey: "provinceNames.spb" },
+    { id: "npt", nameKey: "provinceNames.npt" },
+    { id: "skn", nameKey: "provinceNames.skn" },
+    { id: "skm", nameKey: "provinceNames.skm" },
+    { id: "pbi", nameKey: "provinceNames.pbi" },
+    { id: "pkn", nameKey: "provinceNames.pkn" },
+    { id: "nrt", nameKey: "provinceNames.nrt" },
+    { id: "kbi", nameKey: "provinceNames.kbi" },
+    { id: "pna", nameKey: "provinceNames.pna" },
+    { id: "pkt", nameKey: "provinceNames.pkt" },
+    { id: "sni", nameKey: "provinceNames.sni" },
+    { id: "rng", nameKey: "provinceNames.rng" },
+    { id: "cpn", nameKey: "provinceNames.cpn" },
+    { id: "ska", nameKey: "provinceNames.ska" },
+    { id: "stn", nameKey: "provinceNames.stn" },
+    { id: "trg", nameKey: "provinceNames.trg" },
+    { id: "plg", nameKey: "provinceNames.plg" },
+    { id: "ptn", nameKey: "provinceNames.ptn" },
+    { id: "yla", nameKey: "provinceNames.yla" },
+    { id: "nwt", nameKey: "provinceNames.nwt" },
+    { id: "lksg", nameKey: "provinceNames.lksg" },
+] as const satisfies readonly ProvinceEntry[];
+
+export type ThailandProvince = (typeof THAILAND_PROVINCES)[number];
+export type ThailandProvinceId = (typeof THAILAND_PROVINCES)[number]["id"];

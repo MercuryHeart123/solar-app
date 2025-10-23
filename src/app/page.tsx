@@ -165,9 +165,9 @@ export default function Home() {
         () =>
             THAILAND_PROVINCES.map((province) => ({
                 value: province.id,
-                label: province.name,
+                label: t(province.nameKey),
             })),
-        []
+        [t]
     );
 
     const selectedAppliances = useMemo(
@@ -183,11 +183,14 @@ export default function Home() {
             return t("province.notSelected");
         }
 
-        return (
+        const provinceNameKey =
             THAILAND_PROVINCES.find(
                 (province) => province.id === selectedProvinceId
-            )?.name ?? t("province.notSelected")
-        );
+            )?.nameKey ?? null;
+
+        return provinceNameKey
+            ? t(provinceNameKey)
+            : t("province.notSelected");
     }, [selectedProvinceId, t]);
 
     const applianceSummary = useMemo(() => {
