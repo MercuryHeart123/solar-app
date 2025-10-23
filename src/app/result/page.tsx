@@ -30,8 +30,9 @@ export default function ResultPage() {
         </p>
       </div>
 
-      <section className="rounded-2xl border border-emerald-100 bg-white p-4">
+      <section className="flex flex-col gap-2 rounded-2xl border border-emerald-100 bg-white p-4">
         <Overall />
+        <ProvinceEfficient provinceId="bkk" tier="good" />
       </section>
     </main>
   );
