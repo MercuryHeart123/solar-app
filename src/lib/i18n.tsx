@@ -85,6 +85,11 @@ const translations = {
             "Ready to go? Submit to receive a tailored solar savings estimate in your inbox.",
         "province.notSelected": "Not selected",
         "applianceSummary.empty": "No power-hungry appliances set yet.",
+        "charts.breakdownTitle": "Appliance Usage Breakdown",
+        "charts.billLabel": "Monthly bill",
+        "charts.kwhPerMonth": "{value} kWh / month",
+        "charts.kwh": "{value} kWh",
+        "charts.percent": "({value}%)",
         "residence.options.house.label": "Single-family home",
         "residence.options.house.description":
             "Detached home with rooftop space.",

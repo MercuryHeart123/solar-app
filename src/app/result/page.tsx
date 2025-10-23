@@ -2,31 +2,37 @@
 
 import React, { useEffect, useState } from "react";
 import Loading from "./loading";
+import Overall from "@/app/result/components/Overall";
+import ProvinceEfficient from "./components/ProvinceEfficient";
 
 export default function ResultPage() {
-    const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        // ⏳ จำลองโหลดข้อมูล 2 วินาที
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 2000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
-        return () => clearTimeout(timer);
-    }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
 
-    if (true) {
-        return <Loading />;
-    }
+  return (
+    <main className="p-6 space-y-6">
+      <div className="text-center space-y-2">
+        <h1 className="text-2xl font-semibold text-emerald-700">
+          Overall Usage
+        </h1>
+        <p className="text-sm text-emerald-700">
+          Monthly bill and appliance energy breakdown
+        </p>
+      </div>
 
-    return (
-        <main className="p-6 space-y-4 text-center">
-            <h1 className="text-2xl font-semibold text-green-600">
-                ✅ ผลการวิเคราะห์โซลาร์ของคุณ
-            </h1>
-            <p>ระบบที่เหมาะสม: 5 kWp</p>
-            <p>คืนทุนใน: 6.3 ปี</p>
-            <p>ROI โดยประมาณ: 15% ต่อปี</p>
-        </main>
-    );
+      <section className="rounded-2xl border border-emerald-100 bg-white p-4">
+        <Overall />
+      </section>
+    </main>
+  );
 }
