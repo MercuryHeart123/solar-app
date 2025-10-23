@@ -15,6 +15,7 @@ import {
     THAILAND_PROVINCES,
     type ThailandProvinceId,
 } from "@/data/thailand-provinces";
+import { useRouter } from "next/navigation";
 
 const billSlider = {
     min: 500,
@@ -188,9 +189,7 @@ export default function Home() {
                 (province) => province.id === selectedProvinceId
             )?.nameKey ?? null;
 
-        return provinceNameKey
-            ? t(provinceNameKey)
-            : t("province.notSelected");
+        return provinceNameKey ? t(provinceNameKey) : t("province.notSelected");
     }, [selectedProvinceId, t]);
 
     const applianceSummary = useMemo(() => {
@@ -213,6 +212,8 @@ export default function Home() {
                 : t("steps.household.summary.plural", { count: occupants }),
         [occupants, t]
     );
+
+    const router = useRouter();
 
     const handleOccupantChange = (value: number) => {
         const rounded = Math.round(value);
@@ -270,6 +271,14 @@ export default function Home() {
             occupants,
             appliances,
         });
+
+        const refId = "home_survey_2024_06";
+
+        const query = new URLSearchParams({
+            refId: refId,
+        }).toString();
+
+        router.push(`/result?${query}`);
     };
 
     const stepContent = (() => {
@@ -653,69 +662,62 @@ export default function Home() {
     })();
 
     return (
-        <div className="min-h-screen px-6 py-12">
-            <main className="mx-auto flex max-w-4xl flex-col items-center gap-10">
-                <div className="flex w-full justify-end">
-                    <LanguageSwitcher />
-                </div>
-                <div className="text-center">
-                    <span className="rounded-full bg-emerald-200 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800">
-                        {t("hero.badge")}
-                    </span>
-                    <h1 className="mt-4 text-3xl font-semibold text-emerald-900 sm:text-4xl">
-                        {t("hero.title")}
-                    </h1>
-                    <p className="mt-2 max-w-2xl text-sm text-emerald-800 sm:text-base">
-                        {t("hero.subtitle")}
-                    </p>
-                </div>
+        <main className="mx-auto flex max-w-4xl flex-col items-center gap-10">
+            <div className="text-center">
+                <span className="rounded-full bg-emerald-200 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800">
+                    {t("hero.badge")}
+                </span>
+                <h1 className="mt-4 text-3xl font-semibold text-emerald-900 sm:text-4xl">
+                    {t("hero.title")}
+                </h1>
+                <p className="mt-2 max-w-2xl text-sm text-emerald-800 sm:text-base">
+                    {t("hero.subtitle")}
+                </p>
+            </div>
 
-                <Card className="w-full">
-                    <CardHeader>
-                        <CardTitle className="text-2xl">
-                            {t("card.title")}
-                        </CardTitle>
-                        <p className="mt-2 text-sm text-emerald-700">
-                            {t("card.description")}
-                        </p>
-                    </CardHeader>
-                    <CardContent className="grid gap-8">
-                        <Stepper steps={steps} currentStep={currentStep} />
-                        <div className="grid gap-6 rounded-3xl border border-emerald-100 bg-white p-6">
-                            {stepContent}
-                        </div>
-                        <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-                            <span className="text-xs text-emerald-700">
-                                {t("progress.label", {
-                                    current: stepNumber,
-                                    total: steps.length,
-                                })}
-                            </span>
-                            <div className="flex items-center gap-3">
-                                {!isFirstStep && (
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={handlePrevious}
-                                    >
-                                        {t("buttons.back")}
-                                    </Button>
-                                )}
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle className="text-2xl">
+                        {t("card.title")}
+                    </CardTitle>
+                    <p className="mt-2 text-sm text-emerald-700">
+                        {t("card.description")}
+                    </p>
+                </CardHeader>
+                <CardContent className="grid gap-8">
+                    <Stepper steps={steps} currentStep={currentStep} />
+                    <div className="grid gap-6 rounded-3xl border border-emerald-100 bg-white p-6">
+                        {stepContent}
+                    </div>
+                    <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
+                        <span className="text-xs text-emerald-700">
+                            {t("progress.label", {
+                                current: stepNumber,
+                                total: steps.length,
+                            })}
+                        </span>
+                        <div className="flex items-center gap-3">
+                            {!isFirstStep && (
                                 <Button
-                                    size="lg"
-                                    onClick={
-                                        isLastStep ? handleSubmit : handleNext
-                                    }
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handlePrevious}
                                 >
-                                    {isLastStep
-                                        ? t("buttons.submit")
-                                        : t("buttons.next")}
+                                    {t("buttons.back")}
                                 </Button>
-                            </div>
+                            )}
+                            <Button
+                                size="lg"
+                                onClick={isLastStep ? handleSubmit : handleNext}
+                            >
+                                {isLastStep
+                                    ? t("buttons.submit")
+                                    : t("buttons.next")}
+                            </Button>
                         </div>
-                    </CardContent>
-                </Card>
-            </main>
-        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </main>
     );
 }

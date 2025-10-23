@@ -185,6 +185,7 @@ const translations = {
         "map.captionSelected": "Province selected",
         "map.captionEmpty": "Select a province",
         "searchableSelect.clear": "Clear selection",
+        "loading.text": "Thinking...",
     },
     th: {
         "languageSwitcher.label": "ภาษา",
@@ -358,6 +359,7 @@ const translations = {
         "map.captionSelected": "เลือกจังหวัดแล้ว",
         "map.captionEmpty": "เลือกจังหวัด",
         "searchableSelect.clear": "ล้างการเลือก",
+        "loading.text": "กำลังคำนวณผลลัพธ์จากข้อมูลของคุณ...",
     },
 } as const;
 
