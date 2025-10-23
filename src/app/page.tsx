@@ -1,13 +1,16 @@
 "use client";
 
-import { ChangeEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThailandMap } from "@/components/thailand-map";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Stepper } from "@/components/ui/stepper";
 import { Slider } from "@/components/ui/slider";
+import { SearchableSelect } from "@/components/ui/searchable-select";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 import {
     THAILAND_PROVINCES,
     type ThailandProvinceId,
@@ -32,102 +35,164 @@ const bahtFormatter = new Intl.NumberFormat("th-TH", {
 
 const formatBaht = (value: number) => bahtFormatter.format(value);
 
-const residenceOptions = [
+type ResidenceOptionConfig = {
+    value: string;
+    labelKey: TranslationKey;
+    descriptionKey: TranslationKey;
+};
+
+const RESIDENCE_OPTION_CONFIG = [
     {
         value: "house",
-        label: "Single-family home",
-        description: "Detached home with rooftop space.",
+        labelKey: "residence.options.house.label",
+        descriptionKey: "residence.options.house.description",
     },
     {
         value: "townhouse",
-        label: "Townhouse",
-        description: "Shared walls but your own roof.",
+        labelKey: "residence.options.townhouse.label",
+        descriptionKey: "residence.options.townhouse.description",
     },
     {
         value: "apartment",
-        label: "Apartment / Condo",
-        description: "Shared building and common roof.",
+        labelKey: "residence.options.apartment.label",
+        descriptionKey: "residence.options.apartment.description",
     },
-];
+] satisfies ResidenceOptionConfig[];
 
-const appliancePresets = [
-    { id: "ac", label: "Air conditioner unit" },
-    { id: "heater", label: "Water heater" },
-    { id: "laundry", label: "Washer & dryer pair" },
-    { id: "fridge", label: "Refrigerator" },
-    { id: "tv", label: "Smart TV / Home theater" },
-    { id: "ev", label: "EV charger" },
-];
+type ApplianceOptionConfig = {
+    id: string;
+    labelKey: TranslationKey;
+};
+
+const APPLIANCE_OPTION_CONFIG = [
+    { id: "ac", labelKey: "appliances.options.ac" },
+    { id: "heater", labelKey: "appliances.options.heater" },
+    { id: "laundry", labelKey: "appliances.options.laundry" },
+    { id: "fridge", labelKey: "appliances.options.fridge" },
+    { id: "tv", labelKey: "appliances.options.tv" },
+    { id: "ev", labelKey: "appliances.options.ev" },
+] satisfies ApplianceOptionConfig[];
+
+type StepConfig = {
+    id: string;
+    titleKey: TranslationKey;
+    descriptionKey: TranslationKey;
+};
+
+const STEP_CONFIG = [
+    {
+        id: "bill",
+        titleKey: "steps.overview.bill.title",
+        descriptionKey: "steps.overview.bill.description",
+    },
+    {
+        id: "residence",
+        titleKey: "steps.overview.residence.title",
+        descriptionKey: "steps.overview.residence.description",
+    },
+    {
+        id: "household",
+        titleKey: "steps.overview.household.title",
+        descriptionKey: "steps.overview.household.description",
+    },
+    {
+        id: "appliances",
+        titleKey: "steps.overview.appliances.title",
+        descriptionKey: "steps.overview.appliances.description",
+    },
+] satisfies StepConfig[];
+
+const DEFAULT_RESIDENCE_TYPE = RESIDENCE_OPTION_CONFIG[0]?.value ?? "house";
+
+const DEFAULT_PROVINCE_ID: ThailandProvinceId | null = THAILAND_PROVINCES.length
+    ? THAILAND_PROVINCES[0].id
+    : null;
+
+const APPLIANCE_MAX = 6;
 
 const occupantLimits = {
     min: 1,
     max: 10,
 };
 
-const steps = [
-    {
-        id: "bill",
-        title: "Bill",
-        description: "Monthly spend",
-    },
-    {
-        id: "residence",
-        title: "Residence",
-        description: "Home type",
-    },
-    {
-        id: "household",
-        title: "Household",
-        description: "People count",
-    },
-    {
-        id: "appliances",
-        title: "Appliances",
-        description: "Energy use",
-    },
-];
-
 export default function Home() {
+    const { t } = useI18n();
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [monthlyBill, setMonthlyBill] = useState<number>(4000);
     const [residenceType, setResidenceType] = useState<string>(
-        residenceOptions[0]?.value
+        DEFAULT_RESIDENCE_TYPE
     );
     const [selectedProvinceId, setSelectedProvinceId] =
-        useState<ThailandProvinceId | null>(
-            THAILAND_PROVINCES.length ? THAILAND_PROVINCES[0].id : null
-        );
+        useState<ThailandProvinceId | null>(DEFAULT_PROVINCE_ID);
     const [occupants, setOccupants] = useState<number>(2);
     const [appliances, setAppliances] = useState<Record<string, number>>(() =>
-        appliancePresets.reduce(
+        APPLIANCE_OPTION_CONFIG.reduce(
             (acc, appliance) => ({ ...acc, [appliance.id]: 0 }),
             {} as Record<string, number>
         )
     );
 
+    const steps = useMemo(
+        () =>
+            STEP_CONFIG.map((step) => ({
+                id: step.id,
+                title: t(step.titleKey),
+                description: t(step.descriptionKey),
+            })),
+        [t]
+    );
+
+    const residenceOptions = useMemo(
+        () =>
+            RESIDENCE_OPTION_CONFIG.map((option) => ({
+                value: option.value,
+                label: t(option.labelKey),
+                description: t(option.descriptionKey),
+            })),
+        [t]
+    );
+
+    const applianceOptions = useMemo(
+        () =>
+            APPLIANCE_OPTION_CONFIG.map((appliance) => ({
+                id: appliance.id,
+                label: t(appliance.labelKey),
+            })),
+        [t]
+    );
+
+    const provinceOptions = useMemo(
+        () =>
+            THAILAND_PROVINCES.map((province) => ({
+                value: province.id,
+                label: province.name,
+            })),
+        []
+    );
+
     const selectedAppliances = useMemo(
         () =>
-            appliancePresets.filter(
+            applianceOptions.filter(
                 (appliance) => (appliances[appliance.id] ?? 0) > 0
             ),
-        [appliances]
+        [applianceOptions, appliances]
     );
 
     const selectedProvinceName = useMemo(() => {
         if (!selectedProvinceId) {
-            return "Not selected";
+            return t("province.notSelected");
         }
 
         return (
             THAILAND_PROVINCES.find(
                 (province) => province.id === selectedProvinceId
-            )?.name ?? "Not selected"
+            )?.name ?? t("province.notSelected")
         );
-    }, [selectedProvinceId]);
+    }, [selectedProvinceId, t]);
 
     const applianceSummary = useMemo(() => {
         if (!selectedAppliances.length) {
-            return "No power-hungry appliances set yet.";
+            return t("applianceSummary.empty");
         }
 
         return selectedAppliances
@@ -136,7 +201,15 @@ export default function Home() {
                     `${appliance.label} ×${appliances[appliance.id] ?? 0}`
             )
             .join(", ");
-    }, [appliances, selectedAppliances]);
+    }, [appliances, selectedAppliances, t]);
+
+    const householdSummaryLabel = useMemo(
+        () =>
+            occupants === 1
+                ? t("steps.household.summary.single", { count: occupants })
+                : t("steps.household.summary.plural", { count: occupants }),
+        [occupants, t]
+    );
 
     const handleOccupantChange = (value: number) => {
         const rounded = Math.round(value);
@@ -153,7 +226,7 @@ export default function Home() {
             setAppliances((current) => ({ ...current, [id]: 0 }));
             return;
         }
-        const clamped = Math.min(Math.max(rounded, 1), 6);
+        const clamped = Math.min(Math.max(rounded, 1), APPLIANCE_MAX);
         setAppliances((current) => ({ ...current, [id]: clamped }));
     };
 
@@ -171,14 +244,9 @@ export default function Home() {
         }
     };
 
-    const handleProvinceDropdownChange = (
-        event: ChangeEvent<HTMLSelectElement>
-    ) => {
-        updateProvinceSelection(event.target.value || null);
-    };
-
     const isFirstStep = currentStep === 0;
     const isLastStep = currentStep === steps.length - 1;
+    const stepNumber = currentStep + 1;
 
     const handleNext = () => {
         setCurrentStep((step) => Math.min(step + 1, steps.length - 1));
@@ -208,19 +276,17 @@ export default function Home() {
                     <section className="grid gap-4">
                         <div className="space-y-1">
                             <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
-                                1. Monthly electricity bill
+                                {t("steps.bill.heading", { step: stepNumber })}
                             </h2>
                             <p className="text-sm text-emerald-700">
-                                Slide to match your average bill in Thai Baht
-                                (฿). This helps us estimate savings more
-                                precisely.
+                                {t("steps.bill.description")}
                             </p>
                         </div>
                         <div className="grid gap-5 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                                        Estimated monthly spend
+                                        {t("steps.bill.estimatedSpendLabel")}
                                     </p>
                                     <p className="text-3xl font-semibold text-emerald-900">
                                         {formatBaht(monthlyBill)}
@@ -251,7 +317,7 @@ export default function Home() {
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-emerald-700">
                                     <span>0฿</span>
-                                    <span>Average homes</span>
+                                    <span>{t("steps.bill.averageHomes")}</span>
                                     <span>{formatBaht(billSlider.max)}</span>
                                 </div>
                                 <Slider
@@ -260,7 +326,7 @@ export default function Home() {
                                     step={billSlider.step}
                                     value={monthlyBill}
                                     onValueChange={setMonthlyBill}
-                                    aria-label="Monthly electricity bill in Thai Baht"
+                                    aria-label={t("steps.bill.sliderAria")}
                                 />
                                 <div className="flex justify-between text-xs text-emerald-600">
                                     <span>{formatBaht(billSlider.min)}</span>
@@ -276,12 +342,12 @@ export default function Home() {
                     <section className="flex flex-col gap-6 lg:grid-cols-[minmax(280px,1fr)_minmax(320px,1fr)]">
                         <div className="space-y-1">
                             <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
-                                2. Residence type
+                                {t("steps.residence.heading", {
+                                    step: stepNumber,
+                                })}
                             </h2>
                             <p className="text-sm text-emerald-700">
-                                Choose the option that best matches your roof
-                                situation and tell us where in Thailand you
-                                live.
+                                {t("steps.residence.description")}
                             </p>
                         </div>
                         <div className="grid gap-5 rounded-2xl border border-emerald-100 bg-white p-4 lg:p-6">
@@ -289,15 +355,15 @@ export default function Home() {
                                 <div className="grid gap-4">
                                     <div className="space-y-1">
                                         <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                                            Map your province
+                                            {t("steps.residence.map.title")}
                                         </p>
                                         <p className="text-sm text-emerald-700">
-                                            Click directly on the map or use the
-                                            dropdown. We will highlight the
-                                            province in deep green.
+                                            {t(
+                                                "steps.residence.map.description"
+                                            )}
                                         </p>
                                     </div>
-                                    <div className="rounded-2xl border border-emerald-100 bg-whit p-3">
+                                    <div className="rounded-2xl border border-emerald-100 bg-white p-3">
                                         <ThailandMap
                                             selectedProvinceId={
                                                 selectedProvinceId
@@ -316,39 +382,41 @@ export default function Home() {
                                             htmlFor="province-select"
                                             className="text-xs font-semibold uppercase tracking-wide text-emerald-600"
                                         >
-                                            Province
+                                            {t(
+                                                "steps.residence.map.dropdownLabel"
+                                            )}
                                         </label>
                                         <p className="text-sm text-emerald-700">
-                                            Selecting your province helps us
-                                            tailor the sunshine profile for your
-                                            home.
-                                        </p>
-                                        <select
-                                            id="province-select"
-                                            value={selectedProvinceId ?? ""}
-                                            onChange={
-                                                handleProvinceDropdownChange
-                                            }
-                                            className="h-11 rounded-xl border border-emerald-200 bg-white px-3 text-sm text-emerald-900 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
-                                        >
-                                            <option value="" disabled>
-                                                Choose a province
-                                            </option>
-                                            {THAILAND_PROVINCES.map(
-                                                (province) => (
-                                                    <option
-                                                        key={province.id}
-                                                        value={province.id}
-                                                    >
-                                                        {province.name}
-                                                    </option>
-                                                )
+                                            {t(
+                                                "steps.residence.map.dropdownDescription"
                                             )}
-                                        </select>
+                                        </p>
+                                        <SearchableSelect
+                                            id="province-select"
+                                            ariaLabel={t(
+                                                "steps.residence.map.dropdownLabel"
+                                            )}
+                                            placeholder={t(
+                                                "steps.residence.map.placeholder"
+                                            )}
+                                            emptyMessage={t(
+                                                "steps.residence.map.noResults"
+                                            )}
+                                            clearLabel={t(
+                                                "searchableSelect.clear"
+                                            )}
+                                            options={provinceOptions}
+                                            value={selectedProvinceId}
+                                            onValueChange={(nextValue) =>
+                                                updateProvinceSelection(
+                                                    nextValue
+                                                )
+                                            }
+                                        />
                                     </div>
                                     <div className="grid gap-4 rounded-2xl border border-emerald-100 bg-white p-4">
                                         <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                                            Residence style
+                                            {t("steps.residence.form.title")}
                                         </p>
                                         <RadioGroup
                                             value={residenceType}
@@ -377,31 +445,32 @@ export default function Home() {
                     <section className="grid gap-4">
                         <div className="space-y-1">
                             <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
-                                3. People in the home
+                                {t("steps.household.heading", {
+                                    step: stepNumber,
+                                })}
                             </h2>
                             <p className="text-sm text-emerald-700">
-                                Slide to adjust your household size. Most
-                                solar-ready homes fall between two and four
-                                residents.
+                                {t("steps.household.description")}
                             </p>
                         </div>
                         <div className="grid gap-4 rounded-2xl border border-emerald-100 bg-emerald-50 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6">
                             <div className="space-y-1">
                                 <p className="text-base font-medium text-emerald-900">
-                                    {occupants} resident
-                                    {occupants > 1 ? "s" : ""}
+                                    {householdSummaryLabel}
                                 </p>
                                 <p className="text-sm text-emerald-700">
                                     {occupants <= 2
-                                        ? "Smaller households still drive meaningful demand."
+                                        ? t("steps.household.helper.small")
                                         : occupants >= 6
-                                        ? "Larger homes often unlock the best solar savings."
-                                        : "Nice balance—perfect for solar comparisons."}
+                                        ? t("steps.household.helper.large")
+                                        : t("steps.household.helper.medium")}
                                 </p>
                             </div>
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-emerald-700">
-                                    <span>Household size</span>
+                                    <span>
+                                        {t("steps.household.sliderLabel")}
+                                    </span>
                                     <span>
                                         {occupantLimits.min} –{" "}
                                         {occupantLimits.max}
@@ -413,11 +482,15 @@ export default function Home() {
                                     step={1}
                                     value={occupants}
                                     onValueChange={handleOccupantChange}
-                                    aria-label="Number of people in the home"
+                                    aria-label={t("steps.household.sliderAria")}
                                 />
                                 <div className="flex justify-between text-xs text-emerald-600">
                                     <span>{occupantLimits.min}</span>
-                                    <span>Typical: 3</span>
+                                    <span>
+                                        {t("steps.household.sliderTypical", {
+                                            value: 3,
+                                        })}
+                                    </span>
                                     <span>{occupantLimits.max}</span>
                                 </div>
                             </div>
@@ -430,15 +503,16 @@ export default function Home() {
                         <section className="grid gap-4">
                             <div className="space-y-1">
                                 <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
-                                    4. Power-hungry appliances
+                                    {t("steps.appliances.heading", {
+                                        step: stepNumber,
+                                    })}
                                 </h2>
                                 <p className="text-sm text-emerald-700">
-                                    Slide each bar to match how many you rely
-                                    on—leave it at zero if it rarely runs.
+                                    {t("steps.appliances.description")}
                                 </p>
                             </div>
                             <div className="grid gap-3">
-                                {appliancePresets.map((appliance) => {
+                                {applianceOptions.map((appliance) => {
                                     const quantity =
                                         appliances[appliance.id] ?? 0;
                                     const isActive = quantity > 0;
@@ -458,20 +532,26 @@ export default function Home() {
                                                 </span>
                                                 {isActive ? (
                                                     <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
-                                                        In use
+                                                        {t(
+                                                            "steps.appliances.status.active"
+                                                        )}
                                                     </span>
                                                 ) : null}
                                             </div>
                                             <div className="flex w-full flex-col gap-3 sm:w-72">
                                                 <div className="flex items-center justify-between text-sm font-medium text-emerald-800">
-                                                    <span>Quantity</span>
+                                                    <span>
+                                                        {t(
+                                                            "steps.appliances.quantityLabel"
+                                                        )}
+                                                    </span>
                                                     <span className="flex h-9 w-14 items-center justify-center rounded-full bg-emerald-100 text-base font-semibold text-emerald-900">
                                                         {quantity}
                                                     </span>
                                                 </div>
                                                 <Slider
                                                     min={0}
-                                                    max={6}
+                                                    max={APPLIANCE_MAX}
                                                     step={1}
                                                     value={quantity}
                                                     onValueChange={(
@@ -482,12 +562,18 @@ export default function Home() {
                                                             nextValue
                                                         )
                                                     }
-                                                    aria-label={`${appliance.label} quantity`}
+                                                    aria-label={t(
+                                                        "steps.appliances.sliderAria",
+                                                        {
+                                                            appliance:
+                                                                appliance.label,
+                                                        }
+                                                    )}
                                                 />
                                                 <div className="flex justify-between text-[11px] uppercase tracking-wide text-emerald-600">
                                                     <span>0</span>
                                                     <span>3</span>
-                                                    <span>6</span>
+                                                    <span>{APPLIANCE_MAX}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -498,16 +584,16 @@ export default function Home() {
                         <section className="grid gap-3 rounded-2xl bg-emerald-600 p-5">
                             <div className="flex items-baseline gap-2">
                                 <span className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
-                                    Snapshot
+                                    {t("summary.bannerTitle")}
                                 </span>
                                 <span className="text-xs text-emerald-700">
-                                    Review before sending
+                                    {t("summary.bannerSubtitle")}
                                 </span>
                             </div>
                             <div className="grid gap-2 text-sm text-emerald-800 sm:grid-cols-2">
                                 <div>
                                     <p className="font-semibold text-emerald-900">
-                                        Monthly bill
+                                        {t("summary.monthlyBill")}
                                     </p>
                                     <p className="text-emerald-700">
                                         {formatBaht(monthlyBill)}
@@ -515,7 +601,7 @@ export default function Home() {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-emerald-900">
-                                        Residence
+                                        {t("summary.residence")}
                                     </p>
                                     <p className="text-emerald-700">
                                         {
@@ -529,7 +615,7 @@ export default function Home() {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-emerald-900">
-                                        Province
+                                        {t("summary.province")}
                                     </p>
                                     <p className="text-emerald-700">
                                         {selectedProvinceName}
@@ -537,16 +623,15 @@ export default function Home() {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-emerald-900">
-                                        Household size
+                                        {t("summary.household")}
                                     </p>
                                     <p className="text-emerald-700">
-                                        {occupants} resident
-                                        {occupants > 1 ? "s" : ""}
+                                        {householdSummaryLabel}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="font-semibold text-emerald-900">
-                                        Appliances & quantities
+                                        {t("summary.appliances")}
                                     </p>
                                     <p className="text-emerald-700">
                                         {applianceSummary}
@@ -554,8 +639,7 @@ export default function Home() {
                                 </div>
                             </div>
                             <p className="text-xs text-emerald-700">
-                                Ready to go? Submit to receive a tailored solar
-                                savings estimate in your inbox.
+                                {t("summary.cta")}
                             </p>
                         </section>
                     </div>
@@ -568,28 +652,28 @@ export default function Home() {
     return (
         <div className="min-h-screen px-6 py-12">
             <main className="mx-auto flex max-w-4xl flex-col items-center gap-10">
+                <div className="flex w-full justify-end">
+                    <LanguageSwitcher />
+                </div>
                 <div className="text-center">
                     <span className="rounded-full bg-emerald-200 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800">
-                        Under one minute
+                        {t("hero.badge")}
                     </span>
                     <h1 className="mt-4 text-3xl font-semibold text-emerald-900 sm:text-4xl">
-                        Quick solar readiness check
+                        {t("hero.title")}
                     </h1>
                     <p className="mt-2 max-w-2xl text-sm text-emerald-800 sm:text-base">
-                        Answer four lightweight questions—no typing needed—and
-                        we’ll give you a personalized starting point for your
-                        solar journey.
+                        {t("hero.subtitle")}
                     </p>
                 </div>
 
                 <Card className="w-full">
                     <CardHeader>
                         <CardTitle className="text-2xl">
-                            Your household snapshot
+                            {t("card.title")}
                         </CardTitle>
                         <p className="mt-2 text-sm text-emerald-700">
-                            Tap the options that fit best. You can tweak
-                            anything before submitting.
+                            {t("card.description")}
                         </p>
                     </CardHeader>
                     <CardContent className="grid gap-8">
@@ -599,7 +683,10 @@ export default function Home() {
                         </div>
                         <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-xs text-emerald-700">
-                                Step {currentStep + 1} of {steps.length}
+                                {t("progress.label", {
+                                    current: stepNumber,
+                                    total: steps.length,
+                                })}
                             </span>
                             <div className="flex items-center gap-3">
                                 {!isFirstStep && (
@@ -608,7 +695,7 @@ export default function Home() {
                                         size="sm"
                                         onClick={handlePrevious}
                                     >
-                                        Back
+                                        {t("buttons.back")}
                                     </Button>
                                 )}
                                 <Button
@@ -618,8 +705,8 @@ export default function Home() {
                                     }
                                 >
                                     {isLastStep
-                                        ? "Submit responses"
-                                        : "Next question"}
+                                        ? t("buttons.submit")
+                                        : t("buttons.next")}
                                 </Button>
                             </div>
                         </div>

@@ -1,5 +1,8 @@
+"use client";
+
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export type Step = {
     id: string;
@@ -14,6 +17,7 @@ export interface StepperProps extends React.HTMLAttributes<HTMLElement> {
 
 export const Stepper = React.forwardRef<HTMLElement, StepperProps>(
     ({ steps, currentStep, className, ...props }, ref) => {
+        const { t } = useI18n();
         const clampedCurrent = Math.min(
             Math.max(currentStep, 0),
             steps.length - 1
@@ -23,7 +27,7 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(
             <nav
                 ref={ref}
                 className={cn("w-full", className)}
-                aria-label="Survey progress"
+                aria-label={t("stepper.ariaLabel")}
                 {...props}
             >
                 <ol className="flex items-center justify-between gap-3 sm:gap-4">

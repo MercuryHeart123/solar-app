@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useEffect, useMemo, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 type ProvincePath = {
     id: string;
@@ -31,6 +32,7 @@ function ThailandMapComponent({
     onSelect,
     className,
 }: ThailandMapProps) {
+    const { t } = useI18n();
     const [mapData, setMapData] = useState<MapData | null>(null);
     const [hoveredProvinceId, setHoveredProvinceId] = useState<string | null>(
         null
@@ -93,13 +95,13 @@ function ThailandMapComponent({
 
     const statusLabel = useMemo(() => {
         if (error) {
-            return "Unable to load the Thailand map.";
+            return t("map.error");
         }
         if (!mapData) {
-            return "Loading Thailand map…";
+            return t("map.loading");
         }
         return undefined;
-    }, [error, mapData]);
+    }, [error, mapData, t]);
 
     if (statusLabel) {
         return (
@@ -118,7 +120,7 @@ function ThailandMapComponent({
             className={`flex flex-col items-center gap-3 ${className ?? ""}`}
         >
             <svg
-                aria-label="Selectable map of Thailand"
+                aria-label={t("map.ariaLabel")}
                 viewBox={mapData?.viewBox}
                 className="h-auto w-full max-w-[420px]"
                 role="group"
@@ -168,8 +170,8 @@ function ThailandMapComponent({
                 {selectedProvinceId
                     ? mapData?.provinces.find(
                           (province) => province.id === selectedProvinceId
-                      )?.name ?? "Province selected"
-                    : "Select a province"}
+                      )?.name ?? t("map.captionSelected")
+                    : t("map.captionEmpty")}
             </figcaption>
         </figure>
     );
