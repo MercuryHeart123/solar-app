@@ -111,9 +111,9 @@ export const RadioGroupItem = React.forwardRef<
             }}
             className={cn(
                 "flex items-start gap-3 rounded-2xl border p-4 text-left transition-colors",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500",
-                "data-[state=checked]:border-emerald-500 data-[state=checked]:bg-emerald-50",
-                "hover:border-emerald-400 hover:bg-emerald-50",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--emerald-500)]",
+                "data-[state=checked]:border-[var(--emerald-500)] data-[state=checked]:bg-[var(--emerald-50)]",
+                "hover:border-[var(--emerald-400)] hover:bg-[var(--emerald-50)]",
                 "disabled:cursor-not-allowed disabled:opacity-60",
                 className
             )}
@@ -124,8 +124,8 @@ export const RadioGroupItem = React.forwardRef<
                 className={cn(
                     "mt-1 inline-flex size-4 shrink-0 items-center justify-center rounded-full border-2",
                     checked
-                        ? "border-emerald-500 bg-emerald-500"
-                        : "border-emerald-400"
+                        ? "border-[var(--emerald-500)] bg-[var(--emerald-500)]"
+                        : "border-[var(--emerald-400)]"
                 )}
             >
                 {checked && (
@@ -135,13 +135,13 @@ export const RadioGroupItem = React.forwardRef<
                     />
                 )}
             </span>
-            <span className="flex flex-1 flex-col gap-1 text-sm text-emerald-900">
+            <span className="flex flex-1 flex-col gap-1 text-sm text-[var(--emerald-900)]">
                 <span className="flex items-center gap-2 font-medium">
                     {icon}
                     {label}
                 </span>
                 {description ? (
-                    <span className="text-xs text-emerald-700">
+                    <span className="text-xs text-[var(--emerald-700)]">
                         {description}
                     </span>
                 ) : null}

@@ -22,13 +22,13 @@ export function LanguageSwitcher() {
 
     return (
         <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+            <span className="text-xs font-semibold uppercase tracking-wide text-[var(--emerald-700)]">
                 {t("languageSwitcher.label")}
             </span>
             <div
                 role="group"
                 aria-label={t("languageSwitcher.label")}
-                className="flex items-center gap-1 rounded-full border border-emerald-200 bg-white p-1"
+                className="flex items-center gap-1 rounded-full border border-[var(--emerald-200)] bg-white p-1"
             >
                 {LANGUAGE_OPTIONS.map((option) => {
                     const isActive = option.code === language;
@@ -46,7 +46,7 @@ export function LanguageSwitcher() {
                             className={
                                 isActive
                                     ? "shadow-none"
-                                    : "text-emerald-600 hover:text-emerald-700"
+                                    : "text-[var(--emerald-600)] hover:text-[var(--emerald-700)]"
                             }
                         >
                             {t(option.labelKey)}

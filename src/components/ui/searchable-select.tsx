@@ -177,7 +177,7 @@ export function SearchableSelect({
         <div ref={containerRef} className={cn("relative", className)}>
             <div
                 className={cn(
-                    "flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-3 text-sm text-emerald-900 transition focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-200",
+                    "flex items-center gap-2 rounded-xl border border-[var(--emerald-200)] bg-white px-3 text-sm text-[var(--emerald-900)] transition focus-within:border-[var(--emerald-400)] focus-within:ring-2 focus-within:ring-[var(--emerald-200)]",
                     inputClassName
                 )}
             >
@@ -192,14 +192,14 @@ export function SearchableSelect({
                     onFocus={handleInputFocus}
                     onKeyDown={handleKeyDown}
                     aria-label={ariaLabel ?? placeholder}
-                    className="h-11 w-full border-0 bg-transparent outline-none placeholder:text-emerald-400"
+                    className="h-11 w-full border-0 bg-transparent outline-none placeholder:text-[var(--emerald-400)]"
                 />
                 {selectedOption ? (
                     <button
                         type="button"
                         onClick={handleClearSelection}
                         aria-label={clearLabel ?? "Clear selection"}
-                        className="text-xs font-semibold uppercase tracking-wide text-emerald-500 transition hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-white"
+                        className="text-xs font-semibold uppercase tracking-wide text-[var(--emerald-500)] transition hover:text-[var(--emerald-600)] focus:outline-none focus:ring-2 focus:ring-[var(--emerald-500)] focus:ring-offset-2 focus:ring-offset-white"
                     >
                         <span aria-hidden="true">×</span>
                     </button>
@@ -207,7 +207,7 @@ export function SearchableSelect({
             </div>
             <div
                 className={cn(
-                    "absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-lg",
+                    "absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-[var(--emerald-100)] bg-white shadow-lg",
                     !isOpen && "hidden",
                     listClassName
                 )}
@@ -228,9 +228,9 @@ export function SearchableSelect({
                                         className={cn(
                                             "flex w-full flex-col gap-1 px-3 py-2 text-left text-sm transition",
                                             isActive &&
-                                                "bg-emerald-50 text-emerald-900",
+                                                "bg-[var(--emerald-50)] text-[var(--emerald-900)]",
                                             isSelected &&
-                                                "font-medium text-emerald-700"
+                                                "font-medium text-[var(--emerald-700)]"
                                         )}
                                         onMouseEnter={() =>
                                             setActiveIndex(index)
@@ -242,7 +242,7 @@ export function SearchableSelect({
                                     >
                                         <span>{option.label}</span>
                                         {option.hint ? (
-                                            <span className="text-xs text-emerald-500">
+                                            <span className="text-xs text-[var(--emerald-500)]">
                                                 {option.hint}
                                             </span>
                                         ) : null}
@@ -252,13 +252,13 @@ export function SearchableSelect({
                         })}
                     </ul>
                 ) : (
-                    <div className="px-3 py-4 text-sm text-emerald-500">
+                    <div className="px-3 py-4 text-sm text-[var(--emerald-500)]">
                         {emptyMessage ?? placeholder}
                     </div>
                 )}
             </div>
             {!selectedOption && placeholder ? (
-                <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-emerald-400">
+                <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-[var(--emerald-400)]">
                     {query ? null : placeholder}
                 </div>
             ) : null}

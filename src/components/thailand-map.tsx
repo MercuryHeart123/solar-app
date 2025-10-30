@@ -24,9 +24,9 @@ type ThailandMapProps = {
 const MAP_SOURCE_URL = "/thailand-provinces.svg";
 const DEFAULT_VIEWBOX = "0 0 560 1025";
 
-const BASE_FILL = "#d1fae5";
-const HOVER_FILL = "#34d399";
-const SELECTED_FILL = "#047857";
+const BASE_FILL = "var(--emerald-100)";
+const HOVER_FILL = "var(--emerald-400)";
+const SELECTED_FILL = "var(--emerald-700)";
 
 function ThailandMapComponent({
     selectedProvinceId,
@@ -115,7 +115,7 @@ function ThailandMapComponent({
     if (statusLabel) {
         return (
             <div
-                className={`flex h-full min-h-[280px] items-center justify-center rounded-2xl border border-emerald-100 bg-white text-sm text-emerald-600 ${
+                className={`flex h-full min-h-[280px] items-center justify-center rounded-2xl border border-[var(--emerald-100)] bg-white text-sm text-[var(--emerald-600)] ${
                     className ?? ""
                 }`}
             >
@@ -148,7 +148,7 @@ function ThailandMapComponent({
                             key={province.id}
                             d={province.d}
                             fill={fillColor}
-                            stroke="#059669"
+                            stroke="var(--emerald-600)"
                             strokeWidth={isSelected ? 2 : 0.8}
                             strokeLinejoin="round"
                             tabIndex={0}
@@ -174,12 +174,12 @@ function ThailandMapComponent({
                             onMouseLeave={() => setHoveredProvinceId(null)}
                             onFocus={() => setHoveredProvinceId(province.id)}
                             onBlur={() => setHoveredProvinceId(null)}
-                            className="cursor-pointer transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-emerald-100"
+                            className="cursor-pointer transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-[var(--emerald-500)] focus:ring-offset-2 focus:ring-offset-[var(--emerald-100)]"
                         />
                     );
                 })}
             </svg>
-            <figcaption className="text-xs uppercase tracking-wide text-emerald-600">
+            <figcaption className="text-xs uppercase tracking-wide text-[var(--emerald-600)]">
                 {selectedProvinceId
                     ? provinceNameMap.get(selectedProvinceId) ??
                       t("map.captionSelected")

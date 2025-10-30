@@ -24,14 +24,14 @@ type OverallProps = {
 };
 
 const DEFAULT_COLORS = [
-    "#10B981",
-    "#34D399",
-    "#06B6D4",
-    "#60A5FA",
-    "#F59E0B",
-    "#EF4444",
-    "#6366F1",
-    "#22C55E",
+    "var(--emerald-500)",
+    "var(--emerald-400)",
+    "var(--emerald-300)",
+    "var(--emerald-200)",
+    "var(--emerald-100)",
+    "var(--emerald-50)",
+    "var(--emerald-600)",
+    "var(--emerald-700)",
 ];
 
 const bahtFormatter = new Intl.NumberFormat("th-TH", {
@@ -168,7 +168,7 @@ const Overall: React.FC<OverallProps> = ({ data, billBaht, monthKWh }) => {
 
             {/* legend */}
             <div className="grid gap-3 content-start">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--emerald-700)]">
                     {t("summary.appliances")}
                 </h3>
                 <ul className="grid gap-2">
@@ -178,7 +178,7 @@ const Overall: React.FC<OverallProps> = ({ data, billBaht, monthKWh }) => {
                         return (
                             <li
                                 key={`${d.name}-${i}`}
-                                className="flex items-center justify-between rounded-lg border border-emerald-100 bg-white p-3"
+                                className="flex items-center justify-between rounded-lg border border-[var(--emerald-100)] bg-white p-3"
                             >
                                 <div className="flex items-center gap-3">
                                     <span

@@ -6,10 +6,10 @@ type ButtonSize = "default" | "sm" | "lg";
 
 const variantClasses: Record<ButtonVariant, string> = {
     default:
-        "bg-emerald-600 text-white hover:bg-emerald-500 focus-visible:ring-emerald-500",
+        "bg-[var(--emerald-600)] text-white hover:bg-[var(--emerald-500)] focus-visible:ring-[var(--emerald-500)]",
     outline:
-        "border border-emerald-600 text-emerald-700 hover:bg-emerald-50 focus-visible:ring-emerald-400",
-    ghost: "text-emerald-700 hover:bg-emerald-50 focus-visible:ring-emerald-400",
+        "border border-[var(--emerald-600)] text-[var(--emerald-700)] hover:bg-[var(--emerald-50)] focus-visible:ring-[var(--emerald-400)]",
+    ghost: "text-[var(--emerald-700)] hover:bg-[var(--emerald-50)] focus-visible:ring-[var(--emerald-400)]",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

@@ -54,28 +54,28 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(
                                         className={cn(
                                             "flex size-8 items-center justify-center rounded-full border text-xs font-semibold uppercase tracking-wide sm:size-9 sm:text-sm",
                                             status === "completed" &&
-                                                "border-emerald-500 bg-emerald-500 text-white",
+                                                "border-[var(--emerald-500)] bg-[var(--emerald-500)] text-white",
                                             status === "current" &&
-                                                "border-emerald-600 bg-white text-emerald-700 shadow-sm",
+                                                "border-[var(--emerald-600)] bg-white text-[var(--emerald-700)] shadow-sm",
                                             status === "upcoming" &&
-                                                "border-emerald-200 bg-emerald-50 text-emerald-400"
+                                                "border-[var(--emerald-200)] bg-[var(--emerald-50)] text-[var(--emerald-400)]"
                                         )}
                                         aria-hidden="true"
                                     >
                                         {index + 1}
                                     </span>
-                                    <div className="flex flex-col text-xs leading-tight text-emerald-700 sm:text-sm">
+                                    <div className="flex flex-col text-xs leading-tight text-[var(--emerald-700)] sm:text-sm">
                                         <span
                                             className={cn(
-                                                "font-medium text-emerald-800",
+                                                "font-medium text-[var(--emerald-800)]",
                                                 status === "upcoming" &&
-                                                    "text-emerald-600"
+                                                    "text-[var(--emerald-600)]"
                                             )}
                                         >
                                             {step.title}
                                         </span>
                                         {step.description ? (
-                                            <span className="text-[10px] text-emerald-600 sm:text-xs">
+                                            <span className="text-[10px] text-[var(--emerald-600)] sm:text-xs">
                                                 {step.description}
                                             </span>
                                         ) : null}
@@ -86,8 +86,8 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(
                                         className={cn(
                                             "hidden h-px flex-1 rounded-full sm:block",
                                             status === "completed"
-                                                ? "bg-emerald-500"
-                                                : "bg-emerald-200"
+                                                ? "bg-[var(--emerald-500)]"
+                                                : "bg-[var(--emerald-200)]"
                                         )}
                                         aria-hidden="true"
                                     />

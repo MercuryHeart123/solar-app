@@ -30,8 +30,8 @@ ChartJS.register(
     ChartLegend
 );
 
-const PROVINCE_BAR_COLOR = "#047857";
-const NATIONAL_BAR_COLOR = "#6EE7B7";
+const PROVINCE_BAR_COLOR = "var(--emerald-700)";
+const NATIONAL_BAR_COLOR = "var(--emerald-300)";
 const NATIONAL_AVERAGE_SCORE = 68;
 
 const clamp = (value: number, min: number, max: number) =>
@@ -149,7 +149,7 @@ const ProvinceEfficient: React.FC<ProvinceEfficientProps> = ({
                 y: {
                     grid: { display: false },
                     ticks: {
-                        color: "#047857",
+                        color: "var(--emerald-700)",
                         font: { size: 12 },
                         padding: 8,
                     },
@@ -158,7 +158,7 @@ const ProvinceEfficient: React.FC<ProvinceEfficientProps> = ({
                     beginAtZero: true,
                     suggestedMax: 100,
                     ticks: {
-                        color: "#047857",
+                        color: "var(--emerald-700)",
                         stepSize: 20,
                     },
                     grid: {
@@ -246,20 +246,20 @@ const ProvinceEfficient: React.FC<ProvinceEfficientProps> = ({
 
     return (
         <section className="grid gap-6 md:grid-cols-[minmax(280px,1fr)_minmax(320px,1fr)]">
-            <div className="rounded-2xl border border-emerald-100 bg-white p-4">
+            <div className="rounded-2xl border border-[var(--emerald-100)] bg-white p-4">
                 <ThailandMap
                     selectedProvinceId={selectedProvince ?? undefined}
                     onSelect={handleSelect}
                 />
             </div>
 
-            <div className="flex flex-col gap-4 rounded-2xl border border-emerald-100 bg-white p-4">
+            <div className="flex flex-col gap-4 rounded-2xl border border-[var(--emerald-100)] bg-white p-4">
                 <div>
                     <div className="flex flex-col gap-1 text-center">
-                        <p className="text-xl font-semibold uppercase tracking-wide text-emerald-600">
+                        <p className="text-xl font-semibold uppercase tracking-wide text-[var(--emerald-600)]">
                             {t("result.efficiency.chart.scoreLabel")}
                         </p>
-                        <p className="text-7xl font-semibold text-emerald-700 tabular-nums">
+                        <p className="text-7xl font-semibold text-[var(--emerald-700)] tabular-nums">
                             {overallScore}
                         </p>
                     </div>
@@ -288,12 +288,12 @@ const ProvinceEfficient: React.FC<ProvinceEfficientProps> = ({
                             </CardHeader>
                             <CardContent className="flex-1 flex flex-col justify-around items-center">
                                 <div className="flex items-center gap-4">
-                                    <card.icon className="text-4xl text-emerald-500" />
-                                    <p className="text-4xl font-semibold text-emerald-700 tabular-nums">
+                                    <card.icon className="text-4xl text-[var(--emerald-500)]" />
+                                    <p className="text-4xl font-semibold text-[var(--emerald-700)] tabular-nums">
                                         {card.value}
                                     </p>
                                 </div>
-                                <p className="text-sm text-emerald-600">
+                                <p className="text-sm text-[var(--emerald-600)]">
                                     {card.unit}
                                 </p>
                             </CardContent>
